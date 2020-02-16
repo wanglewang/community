@@ -1,0 +1,1 @@
+alter table user add avator_url varchar(100) null;
