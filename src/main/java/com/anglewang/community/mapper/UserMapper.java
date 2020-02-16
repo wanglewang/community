@@ -3,6 +3,8 @@ package com.anglewang.community.mapper;
 import com.anglewang.community.model.User;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 @Mapper
 public interface UserMapper {
@@ -11,4 +13,7 @@ public interface UserMapper {
             "values " +
             "(#{id},#{accountId},#{name},#{token},#{gmtCreate},#{gmtModified})")
     void insert(User user);
+
+    @Select("select * from user where token=#{token}")
+    User findByToken(@Param("token") String token);
 }
