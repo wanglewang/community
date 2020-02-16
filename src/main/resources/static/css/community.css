@@ -9,3 +9,12 @@ body {
     float:right;
     margin-bottom:15px;
 }
+.media-object {
+    width:48px;
+    heght:48px;
+}
+.record {
+    font-size: 12px;
+    font-weight:normal;
+    color:#999;
+}
