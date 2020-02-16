@@ -2,6 +2,8 @@ package com.anglewang.community.controller;
 
 import com.anglewang.community.dto.AccessTokenDTO;
 import com.anglewang.community.dto.GitHubUser;
+import com.anglewang.community.mapper.UserMapper;
+import com.anglewang.community.model.User;
 import com.anglewang.community.provider.GitHubProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.UUID;
 
 @Controller
 public class AuthorizeController {
@@ -23,6 +26,9 @@ public class AuthorizeController {
     private String clientSecret;
     @Value("${github.redirect.uri}")
     private String redirectUri;
+
+    @Autowired
+    private UserMapper userMapper;
 
     @GetMapping("/callback")
     /**
@@ -38,9 +44,16 @@ public class AuthorizeController {
         accessTokenDTO.setRedirect_uri(redirectUri);
         accessTokenDTO.setState(state);
         String accessToken = gitHubProvider.getAccessToken(accessTokenDTO);
-        GitHubUser user = gitHubProvider.getUser(accessToken);
-        if(user!=null) {
-            request.getSession().setAttribute("user",user);
+        GitHubUser gitHubUser = gitHubProvider.getUser(accessToken);
+        if(gitHubUser!=null) {
+            User user = new User();
+            user.setAccountId(String.valueOf(gitHubUser.getId()));
+            user.setName(gitHubUser.getName());
+            user.setToken(UUID.randomUUID().toString());
+            user.setGmtCreate(System.currentTimeMillis());
+            user.setGmtModified(user.getGmtModified());
+            userMapper.insert(user);
+            request.getSession().setAttribute("user",gitHubUser);
             return "redirect:/";
         }else {
             return "redirect:/";
