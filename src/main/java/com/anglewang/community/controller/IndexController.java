@@ -16,6 +16,13 @@ public class IndexController {
     @Autowired
     private UserMapper userMapper;
 
+    /**
+     * 用户进入首页时，先检测浏览器中的token
+     * 如果有符合条件的token，就登录成功
+     * 否则需要用户手动登录
+     * @param request
+     * @return
+     */
     @GetMapping("/")
     public String index(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
