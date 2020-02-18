@@ -22,20 +22,13 @@ public class PaginationDTO {
 
     /**
      *
-     * @param count  问题个数
+     * @param totalPage  页面个数
      * @param page 当前页
-     * @param size 一页包含几个问题
      */
-    public void setPagination(Integer count, Integer page, Integer size) {
+    public void setPagination(Integer totalPage, Integer page) {
 
         Integer halfCurrentPages=currentPages/2;
-        totalPage=(count/size)+((count%size==0)?0:1);//计算页数
-        if(page<1) {
-            page=1;
-        }
-        if(page>totalPage) {
-            page=getTotalPage();
-        }
+        this.totalPage=totalPage;
         currentPage=page;
         hasPrevious=(currentPage>1);
         hasFirst=(currentPage>(halfCurrentPages+1));

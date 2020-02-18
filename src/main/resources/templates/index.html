@@ -27,7 +27,7 @@
                                 <span th:text="${question.commentCount}"></span>评论
                                 <span th:text="${question.viewCount}"></span>查看
                                 <span th:text="${question.supportCount}"></span>点赞
-                                <span th:text="${#dates.format(question.getGmtCreate(),'yyyy-MM-dd HH:mm:ss')}"
+                                <span th:text="${#dates.format(question.getGmtCreate(),'yyyy-MM-dd HH:mm:ss')}"></span>
                             </span>
                         </div>
                     </div>
@@ -60,7 +60,6 @@
                             </li>
                         </ul>
                     </nav>
-
                 </div>
                 <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
                     <h2>热门话题</h2>

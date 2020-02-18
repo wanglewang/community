@@ -24,15 +24,34 @@ public class QuestionService {
     public PaginationDTO select(Integer page, Integer size) {
         PaginationDTO paginationDTO=new PaginationDTO();
         Integer count = questionMapper.selectCount();//数据库总条目
-        paginationDTO.setPagination(count,page,size);
-        if(page<1) {
-            page=1;
-        }
-        if(page>paginationDTO.getTotalPage()) {
-            page=paginationDTO.getTotalPage();
-        }
+        Integer totalPage=(count/size)+((count%size==0)?0:1);//计算页数
+        page = (page>0&&page<=totalPage) ? page : 1;
+        paginationDTO.setPagination(totalPage,page);
+
         Integer offset=size*(page-1);
         List<Question> questions = questionMapper.select(offset,size);
+        List<QuestionDTO> questionDTOs=new ArrayList<>();
+        for(Question question : questions) {
+            User user = userMapper.selectById(question.getCreatorId());
+            QuestionDTO questionDTO = new QuestionDTO();
+            BeanUtils.copyProperties(question,questionDTO);
+            questionDTO.setUser(user);
+            questionDTOs.add(questionDTO);
+        }
+        paginationDTO.setQuestionDTOs(questionDTOs);
+
+        return paginationDTO;
+    }
+
+    public PaginationDTO selectMyQuestions(Integer id, Integer page, Integer size) {
+        PaginationDTO paginationDTO=new PaginationDTO();
+        Integer count = questionMapper.selectCountByCreatorID(id);//数据库总条目
+        Integer totalPage=(count/size)+((count%size==0)?0:1);//计算页数
+        page = (page>0&&page<totalPage) ? page : 1;
+        paginationDTO.setPagination(totalPage,page);
+
+        Integer offset=size*(page-1);
+        List<Question> questions = questionMapper.selectByCreatorID(id,offset,size);
         List<QuestionDTO> questionDTOs=new ArrayList<>();
         for(Question question : questions) {
             User user = userMapper.selectById(question.getCreatorId());
