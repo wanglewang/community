@@ -47,7 +47,7 @@ public class QuestionService {
         PaginationDTO paginationDTO=new PaginationDTO();
         Integer count = questionMapper.selectCountByCreatorID(id);//数据库总条目
         Integer totalPage=(count/size)+((count%size==0)?0:1);//计算页数
-        page = (page>0&&page<totalPage) ? page : 1;
+        page = (page>0&&page<=totalPage) ? page : 1;
         paginationDTO.setPagination(totalPage,page);
 
         Integer offset=size*(page-1);
