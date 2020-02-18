@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * 首页
+ */
 @Controller
 public class IndexController {
 

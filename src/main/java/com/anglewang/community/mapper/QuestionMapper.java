@@ -1,5 +1,6 @@
 package com.anglewang.community.mapper;
 
+import com.anglewang.community.dto.QuestionDTO;
 import com.anglewang.community.model.Question;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
@@ -27,4 +28,7 @@ public interface QuestionMapper {
 
     @Select("select * from question where creator_id=#{id} limit #{offset},#{size}")
     List<Question> selectByCreatorID(@Param("id") Integer id,@Param("offset") Integer offset, @Param("size") Integer size);
+
+    @Select("select * from question where id=#{id}")
+    Question selectById(@Param("id") Integer id);
 }

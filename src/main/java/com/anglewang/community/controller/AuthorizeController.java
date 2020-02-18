@@ -5,6 +5,7 @@ import com.anglewang.community.dto.GitHubUser;
 import com.anglewang.community.mapper.UserMapper;
 import com.anglewang.community.model.User;
 import com.anglewang.community.provider.GitHubProvider;
+import com.anglewang.community.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -18,6 +19,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.UUID;
 
+/**
+ * 用户登录界面
+ */
 @Controller
 public class AuthorizeController {
     @Autowired
@@ -30,7 +34,7 @@ public class AuthorizeController {
     private String redirectUri;
 
     @Autowired
-    private UserMapper userMapper;
+    private UserService userService;
 
     @GetMapping("/callback")
     /**
@@ -54,10 +58,8 @@ public class AuthorizeController {
             user.setName(gitHubUser.getName());
             String token = UUID.randomUUID().toString();
             user.setToken(token);
-            user.setGmtCreate(System.currentTimeMillis());
-            user.setGmtModified(user.getGmtModified());
             user.setAvatarUrl(gitHubUser.getAvatarUrl());
-            userMapper.insert(user);
+            userService.insertOrUpdate(user);
             response.addCookie(new Cookie("token",token));
 
             return "redirect:/";
@@ -66,5 +68,13 @@ public class AuthorizeController {
         }
     }
 
-
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request,
+                         HttpServletResponse response) {
+        request.getSession().removeAttribute("user");
+        Cookie token = new Cookie("token", null);
+        token.setMaxAge(0);
+        response.addCookie(token);
+        return "redirect:/";
+    }
 }

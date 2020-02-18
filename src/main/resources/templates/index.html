@@ -22,7 +22,9 @@
                             </a>
                         </div>
                         <div class="media-body">
-                            <h4 class="media-heading"th:text="${question.title}"></h4>
+                            <h4 class="media-heading">
+                                <a th:href="@{/question/{id}(id=${question.id})}" th:text="${question.title}"></a>
+                            </h4>
                             <span class="record">
                                 <span th:text="${question.commentCount}"></span>评论
                                 <span th:text="${question.viewCount}"></span>查看
