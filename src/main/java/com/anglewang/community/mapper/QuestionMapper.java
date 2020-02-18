@@ -3,6 +3,7 @@ package com.anglewang.community.mapper;
 import com.anglewang.community.model.Question;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
@@ -15,6 +16,9 @@ public interface QuestionMapper {
             "(#{title},#{description},#{gmtCreate},#{gmtModified},#{creatorId},#{tag})")
     void insert(Question question);
 
-    @Select("select * from question")
-    List<Question> select();
+    @Select("select * from question limit #{offset},#{size}")
+    List<Question> select(@Param("offset") Integer offset, @Param("size") Integer size);
+
+    @Select("select count(1) from question")
+    Integer selectCount();
 }

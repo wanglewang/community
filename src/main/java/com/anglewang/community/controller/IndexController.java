@@ -1,5 +1,6 @@
 package com.anglewang.community.controller;
 
+import com.anglewang.community.dto.PaginationDTO;
 import com.anglewang.community.dto.QuestionDTO;
 import com.anglewang.community.mapper.QuestionMapper;
 import com.anglewang.community.mapper.UserMapper;
@@ -32,7 +33,9 @@ public class IndexController {
      */
     @GetMapping("/")
     public String index(HttpServletRequest request,
-                        Model model) {
+                        Model model,
+                        @RequestParam(value = "page",defaultValue = "1")Integer page,
+                        @RequestParam(value = "size",defaultValue = "2")Integer size) {
         Cookie[] cookies = request.getCookies();
         if(cookies!=null) {
             for (Cookie cookie : cookies) {
@@ -46,8 +49,8 @@ public class IndexController {
                 }
             }
         }
-        List<QuestionDTO> questionDTOs=questionService.select();
-        model.addAttribute("questionDTOs",questionDTOs);
+        PaginationDTO paginationDTO=questionService.select(page,size);
+        model.addAttribute("paginationDTO",paginationDTO);
         return "index";
     }
 }
