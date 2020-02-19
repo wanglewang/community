@@ -24,7 +24,7 @@
             <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12"/>
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" th:text="${questionDTO.description}"></div>
             <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12"/><br/>
-            <a href="/publish" th:if="${session.user!=null&&session.user.id==questionDTO.creatorId}">
+            <a th:href="@{/publish/{id}/(id=${questionDTO.id})}" th:if="${session.user!=null&&session.user.id==questionDTO.creatorId}">
                 <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> 编辑
             </a>
         </div>

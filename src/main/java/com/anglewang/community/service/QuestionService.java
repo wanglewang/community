@@ -74,4 +74,21 @@ public class QuestionService {
         questionDTO.setUser(user);
         return questionDTO;
     }
+
+
+    /**
+     * "insert into question " +
+     *             "(title,description,gmt_create,gmt_modified,creator_id,tag)" +
+     *             "values" +
+     *             "(#{title},#{description},#{gmtCreate},#{gmtModified},#{creatorId},#{tag})")
+     * @param question
+     */
+    public void insertOrUpdate(Question question) {
+        if(question.getId()==null) {
+            questionMapper.insert(question);
+        }else {
+            question.setGmtModified(System.currentTimeMillis());
+            questionMapper.update(question);
+        }
+    }
 }

@@ -1,12 +1,16 @@
 package com.anglewang.community.controller;
 
+import com.anglewang.community.dto.QuestionDTO;
 import com.anglewang.community.mapper.QuestionMapper;
 import com.anglewang.community.model.Question;
 import com.anglewang.community.model.User;
+import com.anglewang.community.service.QuestionService;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -19,7 +23,8 @@ import javax.servlet.http.HttpServletRequest;
 public class PublishController {
 
     @Autowired
-    private QuestionMapper questionMapper;
+    private QuestionService questionService;
+
     @GetMapping("/publish")
     public String publish() {
         return "publish";
@@ -30,6 +35,7 @@ public class PublishController {
             @RequestParam("title") String title,
             @RequestParam("description") String description,
             @RequestParam("tag") String tag,
+            @RequestParam("id") Integer id,
             HttpServletRequest request,
             Model model) {
 
@@ -56,13 +62,25 @@ public class PublishController {
             return "publish";
         }
         Question question = new Question();
+        question.setId(id);
         question.setTitle(title);
         question.setDescription(description);
         question.setTag(tag);
         question.setCreatorId(user.getId());
         question.setGmtCreate(System.currentTimeMillis());
         question.setGmtModified(question.getGmtModified());
-        questionMapper.insert(question);
+        questionService.insertOrUpdate(question);
         return "redirect:/";
+    }
+
+    @GetMapping("/publish/{id}")
+    public String edit(@PathVariable(name="id") Integer id,
+                       Model model) {
+        QuestionDTO question=questionService.selectById(id);
+        model.addAttribute("title",question.getTitle());
+        model.addAttribute("description",question.getDescription());
+        model.addAttribute("tag",question.getTag());
+        model.addAttribute("id",question.getId());
+        return "publish";
     }
 }
