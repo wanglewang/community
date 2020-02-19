@@ -24,3 +24,8 @@ create table USER
         primary key (ID)
 );
 ```
+
+## fly:way
+```
+mvn -Dmybatis.generator.overwrite=true mybatis-generator:generate
+```
