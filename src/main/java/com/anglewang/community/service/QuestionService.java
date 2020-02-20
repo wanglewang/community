@@ -5,6 +5,7 @@ import com.anglewang.community.dto.QuestionDTO;
 import com.anglewang.community.exception.CustomizeErrorCode;
 import com.anglewang.community.exception.CustomizeException;
 import com.anglewang.community.mapper.QuestionMapper;
+import com.anglewang.community.mapper.QuestionMapperExt;
 import com.anglewang.community.mapper.UserMapper;
 import com.anglewang.community.model.Question;
 import com.anglewang.community.model.QuestionExample;
@@ -24,6 +25,8 @@ public class QuestionService {
     private QuestionMapper questionMapper;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private QuestionMapperExt questionMapperExt;
 
     public PaginationDTO select(Integer page, Integer size) {
         PaginationDTO paginationDTO=new PaginationDTO();
@@ -86,14 +89,6 @@ public class QuestionService {
         return questionDTO;
     }
 
-
-    /**
-     * "insert into question " +
-     *             "(title,description,gmt_create,gmt_modified,creator_id,tag)" +
-     *             "values" +
-     *             "(#{title},#{description},#{gmtCreate},#{gmtModified},#{creatorId},#{tag})")
-     * @param question
-     */
     public void insertOrUpdate(Question question) {
         if(question.getId()==null) {
             questionMapper.insert(question);
@@ -111,5 +106,12 @@ public class QuestionService {
                 throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
             }
         }
+    }
+
+    public void increaseView(Integer id) {
+        Question question=new Question();
+        question.setId(id);
+        question.setViewCount(1);
+        questionMapperExt.increaseView(question);
     }
 }
