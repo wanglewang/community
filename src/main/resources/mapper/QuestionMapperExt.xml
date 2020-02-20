@@ -17,4 +17,9 @@
         set VIEW_COUNT=VIEW_COUNT+#{record.viewCount,jdbcType=INTEGER}
         where id=#{record.id}
     </update>
+    <update id="increaseComment" parameterType="map">
+        update QUESTION
+        set comment_count=comment_count+#{record.commentCount,jdbcType=INTEGER}
+        where id=#{record.id}
+    </update>
 </mapper>

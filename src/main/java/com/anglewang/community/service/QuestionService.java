@@ -50,7 +50,7 @@ public class QuestionService {
         return paginationDTO;
     }
 
-    public PaginationDTO selectMyQuestions(Integer id, Integer page, Integer size) {
+    public PaginationDTO selectMyQuestions(Long id, Integer page, Integer size) {
         PaginationDTO paginationDTO=new PaginationDTO();
 
         QuestionExample questionExample = new QuestionExample();
@@ -75,7 +75,7 @@ public class QuestionService {
         return paginationDTO;
     }
 
-    public QuestionDTO selectById(Integer id) {
+    public QuestionDTO selectById(Long id) {
 
         Question question = questionMapper.selectByPrimaryKey(id);
         //捕获异常
@@ -108,7 +108,7 @@ public class QuestionService {
         }
     }
 
-    public void increaseView(Integer id) {
+    public void increaseView(Long id) {
         Question question=new Question();
         question.setId(id);
         question.setViewCount(1);
