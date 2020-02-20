@@ -2,6 +2,8 @@ package com.anglewang.community.service;
 
 import com.anglewang.community.dto.PaginationDTO;
 import com.anglewang.community.dto.QuestionDTO;
+import com.anglewang.community.exception.CustomizeErrorCode;
+import com.anglewang.community.exception.CustomizeException;
 import com.anglewang.community.mapper.QuestionMapper;
 import com.anglewang.community.mapper.UserMapper;
 import com.anglewang.community.model.Question;
@@ -73,6 +75,10 @@ public class QuestionService {
     public QuestionDTO selectById(Integer id) {
 
         Question question = questionMapper.selectByPrimaryKey(id);
+        //捕获异常
+        if(question==null) {
+            throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+        }
         User user = userMapper.selectByPrimaryKey(question.getCreatorId());
         QuestionDTO questionDTO = new QuestionDTO();
         BeanUtils.copyProperties(question,questionDTO);
@@ -100,7 +106,10 @@ public class QuestionService {
 
             QuestionExample questionExample = new QuestionExample();
             questionExample.createCriteria().andIdEqualTo(question.getId());
-            questionMapper.updateByExampleSelective(updateQuestion, questionExample);
+            int updated=questionMapper.updateByExampleSelective(updateQuestion, questionExample);
+            if(updated!=1) {
+                throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+            }
         }
     }
 }
